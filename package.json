@@ -1,0 +1,43 @@
+{
+  "name": "promises-comingle-deferreds",
+  "version": "0.0.0",
+  "description": "example of issues that occur when native promises and jquery deferreds coexist",
+  "scripts": {
+    "build": "webpack --bail",
+    "serve": "node serve.js",
+    "start": "yarn && yarn build && yarn serve",
+    "watch": "webpack --watch --progress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjoyal/promises-comingle-deferreds.git"
+  },
+  "author": "Sean <sean.joyal@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sjoyal/promises-comingle-deferreds/issues"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "promises",
+    "jquery",
+    "deferred"
+  ],
+  "homepage": "https://github.com/sjoyal/promises-comingle-deferreds#readme",
+  "private": true,
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.3.1",
+    "babel-loader": "^8.0.5",
+    "express": "^4.16.4",
+    "prettier": "^1.16.3",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "jquery": "^3.3.1"
+  }
+}
