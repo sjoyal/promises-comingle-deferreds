@@ -1,6 +1,6 @@
 {
   "name": "promises-comingle-deferreds",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "example of issues that occur when native promises and jquery deferreds coexist",
   "scripts": {
     "build": "webpack --bail",
