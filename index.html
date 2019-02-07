@@ -61,9 +61,9 @@ getName()
         return Promise.all([result, isFrom()]);
     })
     .then(([name, planet]) => {
-        console.log('SUCCESS', `${name} is from ${planet}`);
+        log(`${name} is from ${planet}`);
     }, err => {
-        console.error('ERROR', err);
+        log(err);
     }
 );
                         </code>
@@ -114,9 +114,9 @@ getName()
     })
     .then(result => {
         const [name, planet] = result;
-        console.log('SUCCESS', `${name} is from ${planet}`);
+        log(`${name} is from ${planet}`);
     }, err => {
-        console.error('ERROR', err);
+        log(err);
     }
 );
                         </code>
@@ -167,9 +167,9 @@ getName()
     })
     .then(result => {
         const [name, planet] = result;
-        console.log('SUCCESS', `${name} is from ${planet}`);
+        log(`${name} is from ${planet}`);
     }, err => {
-        console.error('ERROR', err);
+        log(err);
     }
 );
                         </code>
@@ -217,9 +217,9 @@ getName()
         return isFrom();
     })
     .then(result => {
-        console.log('SUCCESS', result.name);
+        log(`Retrieved planet name: ${result.name}`);
     }, err => {
-        console.error('ERROR', err);
+        log(err);
     }
 );
                         </code>
@@ -269,9 +269,9 @@ getName()
         return isFrom();
     })
     .then(result => {
-        console.log('SUCCESS', result.name);
+        log(`Retrieved planet name: ${result.name}`);
     }, err => {
-        console.error('ERROR', err);
+        log(err);
     }
 );
                         </code>
@@ -312,9 +312,9 @@ getName()
     .then(result => {
 
         // THIS LOGS NO MATTER IF THE REQUEST SUCCEEDS OR FAILS
-        console.log('SUCCESS', result);
+        log(result);
     }, error => {
-        console.log('ERROR', error);
+        log(error);
     }
 );
                         </code>
@@ -354,12 +354,12 @@ const getName = () => {
 
 getName()
     .then(result => {
-        console.log('SUCCESS', result);
+        log(result);
     }, error => {
 
         // THIS LOGS IF THE INITIAL REQUEST FAILS BECAUSE DEFERRED OBJECTS THAT
         // ARE REJECTED WILL CALL THE REJECT HANDLER IN EVERY SUBSEQUENT HANDLER
-        console.log('ERROR', error);
+        log(error);
     }
 );
                         </code>

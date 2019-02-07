@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import { addOnClick, logResult, removeChildrenIfPresent } from './domUtils'
-import { getName, isFrom } from './requests'
+import { deferredGetName, getName, isFrom } from './requests'
 import { deferredify, promisify } from './util'
 
 const nameUrl = 'https://swapi.co/api/people/?search=r2'
@@ -174,11 +174,11 @@ const Examples = [
 
       this.running = true
       const target = `.result-preview-${this.num}`
+      const nameProxy = deferredGetName(badPathNameUrl)
 
       removeChildrenIfPresent(target)
-      deferredify(getName(badPathNameUrl)).then(
+      nameProxy().then(
         result => {
-          console.log(result)
           logResult(target, result)
           this.running = false
         },

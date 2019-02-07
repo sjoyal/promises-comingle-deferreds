@@ -5,11 +5,9 @@ export function deferredify(request) {
 
   request().then(
     result => {
-      console.log('success')
       p.resolve(result)
     },
     err => {
-      console.log('error')
       p.reject(err)
     }
   )
