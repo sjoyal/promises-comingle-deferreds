@@ -23,9 +23,11 @@
             .code{flex: 1 0;}
             .result{flex: 1 0;border: .2rem solid #e8e8e8;border-left: none;}
             .result-header{display: flex;align-items: center;justify-content: flex-end;height: 2rem;padding: .5rem;}
-            .result-preview{height: calc(100% - 2rem);padding: 2.5rem 2rem;}
+            *[class^='result-preview-']{height: calc(100% - 2rem);padding: 2.5rem 2rem;}
             .run:before{content: '\25b7';margin-right: .5rem;vertical-align: middle;font-size: 2.2rem;}
             .run:hover:before{content: '\25b6';}
+            .error{color: red;}
+            .success{color: limegreen;}
         </style>
     </head>
     <body>
@@ -55,7 +57,8 @@ const isFrom = () => {
 
 getName()
     .then(result => {
-        return Promise.all([result, isFrom()]); // THIS WORKS!
+        // THIS WORKS BECAUSE WE'RE USING FETCH DIRECTLY AND FETCH RETURNS A NATIVE PROMISE OBJECT!
+        return Promise.all([result, isFrom()]);
     })
     .then(([name, planet]) => {
         console.log('SUCCESS', `${name} is from ${planet}`);
@@ -68,13 +71,14 @@ getName()
                 </div>
                 <div class="result">
                     <div class="result-header">result</div>
-                    <div class="result-preview"></div>
+                    <div class="result-preview-1"></div>
                 </div>
             </section>
+
             <section>
                 <div class="code">
                     <header class="code-header">
-                        <h3>Deferreds with Promise.all returned from thenable</h4>
+                        <h3>Deferred with Promise.all returned from thenable</h4>
                         <button class="example-2 run">Run</button>
                     </header>
                     <pre>
@@ -105,8 +109,7 @@ const isFrom = () => {
 
 getName()
     .then(result => {
-        // THIS DOESN"T WORK BECAUSE DEFERREDS CAN'T RETURN NATIVE PROMISES
-        // $.when(...) WORKS IN ITS PLACE aka return $.when([result, isFrom()]);
+        // THIS DOESN'T WORK BECAUSE DEFERREDS CAN'T RETURN NATIVE PROMISES
         return Promise.all([result, isFrom()]);
     })
     .then(result => {
@@ -121,14 +124,68 @@ getName()
                 </div>
                 <div class="result">
                     <div class="result-header">result</div>
-                    <div class="result-preview"></div>
+                    <div class="result-preview-2"></div>
                 </div>
             </section>
+
+            <section>
+                <div class="code">
+                    <header class="code-header">
+                        <h3>Deferred with $.when returned from thenable</h4>
+                        <button class="example-3 run">Run</button>
+                    </header>
+                    <pre>
+                        <code>
+const getName = () => {
+    const p = $.Deferred();
+
+    fetch('https://swapi.co/api/people/?search=r2')
+        .then(res => res.json())
+        .then(data => {
+            p.resolve(data.results[0].name);
+        });
+
+    return p;
+};
+
+const isFrom = () => {
+    const p = $.Deferred();
+
+    fetch('https://swapi.co/api/planets/1/')
+        .then(res => res.json())
+        .then(results => {
+            p.resolve(results.name)
+        });
+
+    return p;
+};
+
+getName()
+    .then(result => {
+        // THIS WORKS BECAUSE DEFERREDS CAN RETURN OTHER DEFERRED TYPE OBJECTS
+        return $.when([result, isFrom()]);
+    })
+    .then(result => {
+        const [name, planet] = result;
+        console.log('SUCCESS', `${name} is from ${planet}`);
+    }, err => {
+        console.error('ERROR', err);
+    }
+);
+                        </code>
+                    </pre>
+                </div>
+                <div class="result">
+                    <div class="result-header">result</div>
+                    <div class="result-preview-3"></div>
+                </div>
+            </section>
+
             <section>
                 <div class="code">
                     <header class="code-header">
                         <h3>Deferreds with promise returned from thenable</h4>
-                        <button class="example-3 run">Run</button>
+                        <button class="example-4 run">Run</button>
                     </header>
                     <pre>
                         <code>
@@ -151,22 +208,13 @@ const isFrom = () => {
             .then(results => {
                 resolve(results.name)
             });
-        });
-
-    // const p = $.Deferred();
-    // console.log('request 2', Date.now())
-    // fetch('https://swapi.co/api/planets/1/')
-        // .then(res => res.json())
-        // .then(results => {
-            // p.resolve(results.name)
-        // });
-
-    // return p;
+    });
 };
 
 getName()
     .then(result => {
-        return isFrom(); // THIS WORKS WHEN isFrom IS A DEFERRED, NOT A NATIVE PROMISE
+        // THIS DOESN'T WORK BECAUSE DEFERREDS CAN'T RETURN NATIVE PROMISES
+        return isFrom();
     })
     .then(result => {
         console.log('SUCCESS', result.name);
@@ -179,18 +227,73 @@ getName()
                 </div>
                 <div class="result">
                     <div class="result-header">result</div>
-                    <div class="result-preview"></div>
+                    <div class="result-preview-4"></div>
                 </div>
             </section>
+
             <section>
                 <div class="code">
                     <header class="code-header">
-                        <h3>Fetch with error handled in request handler</h4>
-                        <button class="example-4 run">Run</button>
+                        <h3>Deferred with another deferred returned from thenable</h4>
+                        <button class="example-5 run">Run</button>
                     </header>
                     <pre>
                         <code>
 const getName = () => {
+    const p = $.Deferred();
+
+    fetch('https://swapi.co/api/people/?search=r2')
+        .then(res => res.json())
+        .then(data => {
+            p.resolve(data.results[0].name);
+        });
+
+    return p;
+};
+
+const isFrom = () => {
+    const p = $.Deferred();
+    console.log('request 2', Date.now())
+    fetch('https://swapi.co/api/planets/1/')
+        .then(res => res.json())
+        .then(results => {
+            p.resolve(results.name)
+        });
+
+    return p;
+};
+
+getName()
+    .then(result => {
+        // THIS WORKS BECAUSE DEFERREDS CAN RETURN OTHER DEFERRED TYPE OBJECTS
+        return isFrom();
+    })
+    .then(result => {
+        console.log('SUCCESS', result.name);
+    }, err => {
+        console.error('ERROR', err);
+    }
+);
+                        </code>
+                    </pre>
+                </div>
+                <div class="result">
+                    <div class="result-header">result</div>
+                    <div class="result-preview-5"></div>
+                </div>
+            </section>
+
+            <section>
+                <div class="code">
+                    <header class="code-header">
+                        <h3>Fetch with error handled in request handler</h4>
+                        <button class="example-6 run">Run</button>
+                    </header>
+                    <pre>
+                        <code>
+const getName = () => {
+
+    // THE URL USED HERE IS INCORRECT AND WILL RETURN A 404
     return fetch('https://swapi.co/api/peeple/?search=r2')
         .then(res => {
             if (res.ok) {
@@ -207,7 +310,9 @@ const getName = () => {
 
 getName()
     .then(result => {
-        console.log('SUCCESS', result); // this logs no matter if the request succeeds or fails
+
+        // THIS LOGS NO MATTER IF THE REQUEST SUCCEEDS OR FAILS
+        console.log('SUCCESS', result);
     }, error => {
         console.log('ERROR', error);
     }
@@ -217,20 +322,22 @@ getName()
                 </div>
                 <div class="result">
                     <div class="result-header">result</div>
-                    <div class="result-preview"></div>
+                    <div class="result-preview-6"></div>
                 </div>
             </section>
+
             <section>
                 <div class="code">
                     <header class="code-header">
                         <h3>Deferred with error handled in request handler</h4>
-                        <button class="example-5 run">Run</button>
+                        <button class="example-7 run">Run</button>
                     </header>
                     <pre>
                         <code>
 const getName = () => {
     const p = $.Deferred();
 
+    // THE URL USED HERE IS INCORRECT AND WILL RETURN A 404
     return fetch('https://swapi.co/api/peeple/?search=r2')
         .then(res => {
             if (res.ok) {
@@ -249,9 +356,9 @@ getName()
     .then(result => {
         console.log('SUCCESS', result);
     }, error => {
-        // this logs no matter if the request fails bc once a deferred rejects
-        // every error handler is called for the rest of the chain
-        // (unlike native promises)
+
+        // THIS LOGS IF THE INITIAL REQUEST FAILS BECAUSE DEFERRED OBJECTS THAT
+        // ARE REJECTED WILL CALL THE REJECT HANDLER IN EVERY SUBSEQUENT HANDLER
         console.log('ERROR', error);
     }
 );
@@ -260,7 +367,7 @@ getName()
                 </div>
                 <div class="result">
                     <div class="result-header">result</div>
-                    <div class="result-preview"></div>
+                    <div class="result-preview-7"></div>
                 </div>
             </section>
         </main>
